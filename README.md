@@ -9,6 +9,5 @@
 
 - AWS Rekognition
 - AWS EC2 (Amazon Elastic Compute Cloud)
-- AWS Lambda
 - AWS S3 (Amazon Simple Storage Service)
 
