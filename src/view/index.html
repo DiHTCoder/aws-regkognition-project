@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <title>AWS Rekognition</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="title">
+            <h1>AWS Rekognition</h1>
+        </div>
+
+        <div class="body">
+            <div class="image-upload">
+                <div class="image-input">
+                    <label for="image">Upload image: </label>
+                    <input type="file" id="image" name="image" />
+                </div>
+
+                <button class="btn">Refresh</button>
+
+                <div class="image-display">
+                    <img id="imageDisplay" />
+                </div>
+            </div>
+
+
+            <div class="buttons">
+                <button class="btn">Detect</button>
+                <button class="btn">Detect face</button>
+                <button class="btn">Detect text</button>
+                <button class="btn">Detect celeb</button>
+                <button class="btn">Detect vehicle</button>
+            </div>
+
+            <div class="result">
+                <h2>Result</h2>
+                <div class="data">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
