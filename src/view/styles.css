@@ -46,3 +46,8 @@
     height: 300px;
     border: 1px solid #ccc;
 }
+
+.title{
+    text-align: center;
+    background-color: rgb(226, 142, 24);
+}
