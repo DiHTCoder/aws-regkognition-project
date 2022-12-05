@@ -81,5 +81,26 @@ app.post("/detectFace", (req, res) => {
         }
     });
 });
+app.post('detectText', upload.array("image", 1), (req, res) => {
+    var params = {
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.file
+            }
+        }
+    };
+    console.log(req.file);
+    textDetection(params,res);
+});
+function textDetection(params, res) {
+    rekognition.detectText(params, function (err,data) {
+        if (err) console.log(err, err.stack);
+        else {
+            console.log(data);
+            res.send({data: data});
+        }
+    });
+}
 
 app.listen(3000, () => console.log("Server is running on port 3000"));
