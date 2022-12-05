@@ -1,9 +1,11 @@
 const express = require("express");
+const { S3Client } = require("@aws-sdk/client-s3");
 const bodyParser = require("body-parser");
 const multerS3 = require("multer-s3");
 const multer = require("multer");
 const aws = require("aws-sdk");
 const cors = require("cors");
+const { application } = require("express");
 require("dotenv").config();
 
 const app = express();
@@ -11,15 +13,25 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static("view"));
 
-const s3 = new aws.S3({});
-const bucketName = "test";
+const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        sessionToken: process.env.AWS_SESSION_TOKEN,
+    },
+    sslEnabled: false,
+    s3ForcePathStyle: true,
+    signatureVersion: "v4",
+});
+const bucketName = "testrekogni";
 const rekognition = new aws.Rekognition();
 
 aws.config.update({
+    region: process.env.AWS_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     sessionToken: process.env.AWS_SESSION_TOKEN,
-    region: process.env.AWS_REGION,
     signatureVersion: "v4",
 });
 
@@ -40,30 +52,34 @@ const upload = multer({
         acl: "public-read",
         s3: s3,
         bucket: bucketName,
-        key: function (req, file, cb) {
-            req.file = Date.now() + file.originalname;
-            cb(null, Date.now() + file.originalname);
+        key: function (req, image, cb) {
+            req.image = Date.now() + image.originalname;
+            cb(null, Date.now() + image.originalname);
         },
     }),
 });
 
-app.post("/detectFace", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("image"), (req, res) => {
+    res.send({ image: req.image });
+});
+
+app.post("/detectFace", (req, res) => {
+    console.log(req.body.name);
     var params = {
         Image: {
             S3Object: {
                 Bucket: bucketName,
-                Name: req.file,
+                Name: req.body.name,
             },
         },
     };
-    console.log(req.file);
-    // rekognition.detectFaces(params, function (err, data) {
-    //     if (err) console.log(err, err.stack);
-    //     else {
-    //         console.log(data);
-    //         res.send({ data: data });
-    //     }
-    // });
+    rekognition.detectFaces(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else {
+            console.log(data);
+            res.send({ data: data });
+        }
+    });
 });
 app.post('detectText', upload.array("image", 1), (req, res) => {
     var params = {

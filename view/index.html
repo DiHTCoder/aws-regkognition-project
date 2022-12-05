@@ -20,7 +20,7 @@
         <div class="body">
             <div class="image-upload">
                 <div class="image-input">
-                    <label for="image">Upload image: </label>
+                    <label for="imageUp">Upload image: </label>
                     <input type="file" id="imageUp" name="image" />
                 </div>
                 <div class="image-display">
@@ -31,7 +31,7 @@
             <div class="buttons">
                 <button class="btn">Detect</button>
                 <button class="btn">Detect Label</button>
-                <button class="btn">Detect Face</button>
+                <button id="btnDetectFace" class="btn">Detect Face</button>
                 <button class="btn">Detect Text</button>
                 <button class="btn">Detect Celeb</button>
                 <button class="btn">Detect Vehicle</button>
@@ -45,6 +45,7 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="script.js"></script>
 </body>
 
