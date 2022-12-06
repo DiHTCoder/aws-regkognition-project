@@ -17,6 +17,28 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
 
     axios.post("/detectFace", { name: fileName }).then((response) => {
         const result = response.data.data.FaceDetails;
-        console.log(result);
+        var boundingBox = document.getElementById("image-display");
+        for (let i = 0; i < result.length; i++) {
+            var box = result[i].BoundingBox;
+            var image = document.getElementById("imageDisplay");
+            boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+                                                            height:${
+                                                                box.Height *
+                                                                image.height
+                                                            }px; 
+                                                            width: ${
+                                                                box.Width *
+                                                                image.width
+                                                            }px;
+                                                            top: ${
+                                                                box.Top *
+                                                                image.height
+                                                            }px; 
+                                                            left: ${
+                                                                box.Left *
+                                                                image.width
+                                                            }px;
+                                                            border: 2px solid green"> </div> `;
+        }
     });
 });

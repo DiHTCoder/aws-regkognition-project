@@ -5,7 +5,6 @@ const multerS3 = require("multer-s3");
 const multer = require("multer");
 const aws = require("aws-sdk");
 const cors = require("cors");
-const { application } = require("express");
 require("dotenv").config();
 
 const app = express();
@@ -81,24 +80,24 @@ app.post("/detectFace", (req, res) => {
         }
     });
 });
-app.post('detectText', upload.array("image", 1), (req, res) => {
+app.post("detectText", upload.array("image", 1), (req, res) => {
     var params = {
         Image: {
             S3Object: {
                 Bucket: bucketName,
-                Name: req.file
-            }
-        }
+                Name: req.file,
+            },
+        },
     };
     console.log(req.file);
-    textDetection(params,res);
+    textDetection(params, res);
 });
 function textDetection(params, res) {
-    rekognition.detectText(params, function (err,data) {
+    rekognition.detectText(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else {
             console.log(data);
-            res.send({data: data});
+            res.send({ data: data });
         }
     });
 }
