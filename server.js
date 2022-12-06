@@ -80,21 +80,21 @@ app.post("/detectFace", (req, res) => {
         }
     });
 });
-app.post('/detectText', (req, res) => {
+app.post("/detectText", (req, res) => {
     var params = {
         Image: {
             S3Object: {
                 Bucket: bucketName,
-                Name: req.body.name
-            }
-        }
+                Name: req.body.name,
+            },
+        },
     };
     rekognition.detectText(params, function (err, data) {
         if (err) {
             console.log(err, err.stack);
         } else {
             console.log(data);
-            res.send({data: data});
+            res.send({ data: data });
         }
     });
 });
