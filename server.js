@@ -27,10 +27,10 @@ const bucketName = "testrekogni";
 const rekognition = new aws.Rekognition();
 
 aws.config.update({
-    region: process.env.AWS_REGION,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     sessionToken: process.env.AWS_SESSION_TOKEN,
+    region: process.env.AWS_REGION,
     signatureVersion: "v4",
 });
 
@@ -80,26 +80,23 @@ app.post("/detectFace", (req, res) => {
         }
     });
 });
-app.post("detectText", upload.array("image", 1), (req, res) => {
+app.post("/detectText", (req, res) => {
     var params = {
         Image: {
             S3Object: {
                 Bucket: bucketName,
-                Name: req.file,
+                Name: req.body.name,
             },
         },
     };
-    console.log(req.file);
-    textDetection(params, res);
-});
-function textDetection(params, res) {
     rekognition.detectText(params, function (err, data) {
-        if (err) console.log(err, err.stack);
-        else {
+        if (err) {
+            console.log(err, err.stack);
+        } else {
             console.log(data);
             res.send({ data: data });
         }
     });
-}
+});
 
 app.listen(3000, () => console.log("Server is running on port 3000"));
