@@ -51,3 +51,12 @@ document.getElementById("btnDetectText").addEventListener("click", (e) => {
         console.log(result);
     });
 });
+
+document.getElementById("btnDetectText").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    axios.post("/detectText", { name: fileName }).then((response) => {
+        const result = response.data.data.TextDetections;
+        console.log(result);
+    });
+});
