@@ -11,12 +11,13 @@
 }
 
 #image-display {
-    height: 100%;
-    width: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    height: auto;
 }
 
 #imageDisplay {
-    object-fit: cover;
     max-height: 48vw;
     max-width: 100%;
     width: auto;
