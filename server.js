@@ -62,6 +62,136 @@ app.post("/upload", upload.single("image"), (req, res) => {
     res.send({ image: req.image });
 });
 
+app.post("/detectTest", (req, res) => {
+    var params = {
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.body.name,
+            },
+        },
+        MinConfidence: 80,
+    };
+    rekognition.detectLabels(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else {
+            labelData = data.Labels;
+            // console.log(labelData);
+            finalResult = {
+                text: {},
+                celebrities: {},
+            };
+            let textFlag = false;
+            let personFlag = false;
+            let AllTypeFlag = false;
+            for (let i = 0; i < labelData.length; i++) {
+                if (labelData[i].Name === "Text") {
+                    textFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Page") {
+                    textFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Paper") {
+                    textFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Person") {
+                    personFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Human") {
+                    personFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Face") {
+                    personFlag = true;
+                    continue;
+                }
+                if (labelData[i].Name === "Poster") {
+                    textFlag = true;
+                    continue;
+                }
+            }
+            if (textFlag && personFlag) {
+                AllTypeFlag = true;
+                textFlag = false;
+                personFlag = false;
+            }
+            // console.log(textFlag);
+            // console.log(personFlag);
+            // console.log(AllTypeFlag);
+            if (textFlag) {
+                textResult = {};
+                textParam = {
+                    Image: {
+                        S3Object: {
+                            Bucket: bucketName,
+                            Name: req.body.name,
+                        },
+                    },
+                };
+                rekognition.detectText(textParam, function (err, data) {
+                    if (err) console.log(err, err.stack);
+                    else {
+                        finalResult.text = data;
+                        finalResult.celebrities = null;
+                        res.send({ data: finalResult });
+                    }
+                });
+            }
+            if (personFlag) {
+                personParam = {
+                    Image: {
+                        S3Object: {
+                            Bucket: bucketName,
+                            Name: req.body.name,
+                        },
+                    },
+                };
+                rekognition.recognizeCelebrities(
+                    personParam,
+                    function (err, data) {
+                        if (err) console.log(err, err.stack);
+                        else {
+                            finalResult.text = null;
+                            finalResult.celebrities = data;
+                            res.send({ data: finalResult });
+                        }
+                    }
+                );
+            }
+            if (AllTypeFlag) {
+                posterParam = {
+                    Image: {
+                        S3Object: {
+                            Bucket: bucketName,
+                            Name: req.body.name,
+                        },
+                    },
+                };
+                rekognition.detectText(allTypeParam, function (err, data) {
+                    if (err) console.log(err, err.stack);
+                    else {
+                        finalResult.text = data;
+                        rekognition.recognizeCelebrities(
+                            allTypeParam,
+                            function (err, data) {
+                                if (err) console.log(err, err.stack);
+                                else {
+                                    finalResult.celebrities = data;
+                                }
+                            }
+                        );
+                        res.send({ data: finalResult });
+                    }
+                });
+            }
+        }
+    });
+});
+
 app.post("/detectFace", (req, res) => {
     console.log(req.body.name);
     var params = {
