@@ -82,48 +82,6 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
   });
 });
 
-document.getElementById("btnDetectText").addEventListener("click", (e) => {
-  e.preventDefault();
-
-  axios.post("/detectText", { name: fileName }).then((response) => {
-    textDisplay(response.data.data);
-  });
-});
-
-document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
-  e.preventDefault();
-
-  axios.post("/detectLabel", { name: fileName }).then((response) => {
-    var result = response.data.data.Labels;
-    var data = document.getElementById("data");
-    data.innerHTML = "";
-    for (let i = 0; i < result.length; i++) {
-      data.innerHTML += `<span> Confidence: ${result[i].Confidence} </span><br>
-                                <span> Name: ${result[i].Name}</span>`;
-      if (result[i].Parents.length != 0) {
-        data.innerHTML += `<br><span> Parents: </span>`;
-      }
-      for (let j = 0; j < result[i].Parents.length; j++) {
-        data.innerHTML += `<span>${result[i].Parents[j].Name} , </span> `;
-      }
-      data.innerHTML += `<br><br>`;
-    }
-  });
-});
-
-document.getElementById("btnTest").addEventListener("click", (e) => {
-  e.preventDefault();
-
-  axios.post("/detectTest", { name: fileName }).then((response) => {
-    if (response.data.data.celebrities != null) {
-      celebDisplay(response.data.data.celebrities);
-    }
-    if (response.data.data.text != null) {
-      textDisplay(response.data.data.text);
-    }
-  });
-});
-
 function textDisplay(kq) {
   const result = kq.TextDetections;
   var data = document.getElementById("data");
