@@ -75,3 +75,10 @@
     background-color: transparent !important;
     display: none;
 }
+
+.color-box {
+    display: block;
+    height: 35px;
+    width: 45px;
+    background-color: transparent;
+}

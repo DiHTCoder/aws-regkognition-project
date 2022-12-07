@@ -62,42 +62,6 @@ app.post("/upload", upload.single("image"), (req, res) => {
     res.send({ image: req.image });
 });
 
-app.post("/detectFace", (req, res) => {
-    console.log(req.body.name);
-    var params = {
-        Image: {
-            S3Object: {
-                Bucket: bucketName,
-                Name: req.body.name,
-            },
-        },
-    };
-    rekognition.detectFaces(params, function (err, data) {
-        if (err) console.log(err, err.stack);
-        else {
-            console.log(data);
-            res.send({ data: data });
-        }
-    });
-});
-app.post("/detectText", (req, res) => {
-    var params = {
-        Image: {
-            S3Object: {
-                Bucket: bucketName,
-                Name: req.body.name,
-            },
-        },
-    };
-    rekognition.detectText(params, function (err, data) {
-        if (err) {
-            console.log(err, err.stack);
-        } else {
-            console.log(data);
-            res.send({ data: data });
-        }
-    });
-});
 app.post("/detectTest", (req, res) => {
     var params = {
         Image: {
@@ -112,7 +76,7 @@ app.post("/detectTest", (req, res) => {
         if (err) console.log(err, err.stack);
         else {
             labelData = data.Labels;
-            console.log(labelData);
+            // console.log(labelData);
             finalResult = {
                 text: {},
                 celebrities: {},
@@ -155,10 +119,9 @@ app.post("/detectTest", (req, res) => {
                 textFlag = false;
                 personFlag = false;
             }
-            console.log(textFlag);
-            console.log(personFlag);
-            console.log(AllTypeFlag);
-
+            // console.log(textFlag);
+            // console.log(personFlag);
+            // console.log(AllTypeFlag);
             if (textFlag) {
                 textResult = {};
                 textParam = {
@@ -200,7 +163,6 @@ app.post("/detectTest", (req, res) => {
                 );
             }
             if (AllTypeFlag) {
-                posterResult = {};
                 posterParam = {
                     Image: {
                         S3Object: {
@@ -218,9 +180,7 @@ app.post("/detectTest", (req, res) => {
                             function (err, data) {
                                 if (err) console.log(err, err.stack);
                                 else {
-                                    console.log(typeof data);
                                     finalResult.celebrities = data;
-                                    console.log(typeof posterResult);
                                 }
                             }
                         );
@@ -228,6 +188,44 @@ app.post("/detectTest", (req, res) => {
                     }
                 });
             }
+        }
+    });
+});
+
+app.post("/detectFace", (req, res) => {
+    console.log(req.body.name);
+    var params = {
+        Attributes: ["ALL"],
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.body.name,
+            },
+        },
+    };
+    rekognition.detectFaces(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else {
+            console.log(data);
+            res.send({ data: data });
+        }
+    });
+});
+app.post('/detectText', (req, res) => {
+    var params = {
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.body.name
+            }
+        }
+    };
+    rekognition.detectText(params, function (err, data) {
+        if (err) {
+            console.log(err, err.stack);
+        } else {
+            console.log(data);
+            res.send({data: data});
         }
     });
 });
