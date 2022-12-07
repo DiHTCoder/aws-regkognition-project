@@ -227,23 +227,4 @@ app.post("/detectText", (req, res) => {
   });
 });
 
-app.post("/detectLabel", (req, res) => {
-  var params = {
-    Image: {
-      S3Object: {
-        Bucket: bucketName,
-        Name: req.body.name,
-      },
-    },
-  };
-  rekognition.detectLabels(params, function (err, data) {
-    if (err) {
-      console.log(err, err.stack);
-    } else {
-      console.log(data);
-      res.send({ data: data });
-    }
-  });
-});
-
 app.listen(3000, () => console.log("Server is running on port 3000"));
