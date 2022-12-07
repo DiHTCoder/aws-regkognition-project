@@ -210,6 +210,13 @@ app.post("/detectFace", (req, res) => {
 });
 app.post("/detectText", (req, res) => {
   var params = {
+    Filters: {
+      WordFilter: {
+        MinConfidence: 80,
+        //MinBoundingBoxWidth
+        //MinBoundingBoxHeight
+      },
+    },
     Image: {
       S3Object: {
         Bucket: bucketName,
