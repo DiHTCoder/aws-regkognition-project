@@ -175,6 +175,7 @@ function textDisplay(kq) {
 }
 function celebDisplay(kq) {}
 
+
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
