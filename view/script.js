@@ -101,6 +101,14 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
   });
 });
 
+document.getElementById("btnDetectText").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    axios.post("/detectText", { name: fileName }).then((response) => {
+        textDisplay(response.data.data);
+    });
+});
+
 document.getElementById("btnTest").addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -112,14 +120,6 @@ document.getElementById("btnTest").addEventListener("click", (e) => {
         if (response.data.data.text != null) {
             textDisplay(response.data.data.text);
         }
-    });
-})
-
-document.getElementById("btnDetectText").addEventListener("click", (e) => {
-    e.preventDefault();
-
-    axios.post("/detectText", { name: fileName }).then((response) => {
-        textDisplay(response.data.data);
     });
 });
 
@@ -139,14 +139,18 @@ function textDisplay(kq) {
       }</span><br>`;
     else {
       if (result[i].ParentId == parentId) {
-        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${parentId + 1}
-        : ${result[i].DetectedText}</span><br>`;
+        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
+          parentId + 1
+        }: 
+                    ${result[i].DetectedText}</span><br>`;
         index += 1;
       } else {
         index = 1;
         parentId += 1;
-        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${parentId + 1}
-        : ${result[i].DetectedText}</span><br>`;
+        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
+          parentId + 1
+        }: 
+                    ${result[i].DetectedText}</span><br>`;
         index += 1;
       }
     }
