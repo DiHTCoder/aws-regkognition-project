@@ -226,7 +226,6 @@ app.post("/detectText", (req, res) => {
     }
   });
 });
-
 app.post("/detectLabel", (req, res) => {
   var params = {
     Image: {
