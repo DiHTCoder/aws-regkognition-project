@@ -100,29 +100,26 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
     }
   });
 });
-
 document.getElementById("btnDetectText").addEventListener("click", (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    axios.post("/detectText", { name: fileName }).then((response) => {
-        textDisplay(response.data.data);
-    });
+  axios.post("/detectText", { name: fileName }).then((response) => {
+    textDisplay(response.data.data);
+  });
 });
 
 document.getElementById("btnTest").addEventListener("click", (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-
-    axios.post("/detectTest", { name: fileName }).then(response => {
-        if(response.data.data.celebrities != null){
-            celebDisplay(response.data.data.celebrities);
-        }
-        if (response.data.data.text != null) {
-            textDisplay(response.data.data.text);
-        }
-    });
+  axios.post("/detectTest", { name: fileName }).then((response) => {
+    if (response.data.data.celebrities != null) {
+      celebDisplay(response.data.data.celebrities);
+    }
+    if (response.data.data.text != null) {
+      textDisplay(response.data.data.text);
+    }
+  });
 });
-
 function textDisplay(kq) {
   const result = kq.TextDetections;
   var data = document.getElementById("data");

@@ -211,11 +211,11 @@ app.post("/detectFace", (req, res) => {
 app.post("/detectText", (req, res) => {
   var params = {
     Filters: {
-        WordFilter: {
-            MinConfidence: 80,
-            //MinBoundingBoxWidth
-            //MinBoundingBoxHeight
-        }
+      WordFilter: {
+        MinConfidence: 80,
+        //MinBoundingBoxWidth
+        //MinBoundingBoxHeight
+      },
     },
     Image: {
       S3Object: {
@@ -225,24 +225,6 @@ app.post("/detectText", (req, res) => {
     },
   };
   rekognition.detectText(params, function (err, data) {
-    if (err) {
-      console.log(err, err.stack);
-    } else {
-      console.log(data);
-      res.send({ data: data });
-    }
-  });
-});
-app.post("/detectLabel", (req, res) => {
-  var params = {
-    Image: {
-      S3Object: {
-        Bucket: bucketName,
-        Name: req.body.name,
-      },
-    },
-  };
-  rekognition.detectLabels(params, function (err, data) {
     if (err) {
       console.log(err, err.stack);
     } else {
