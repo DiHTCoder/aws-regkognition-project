@@ -65,6 +65,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
 app.post("/detectFace", (req, res) => {
     console.log(req.body.name);
     var params = {
+        Attributes: ["ALL"],
         Image: {
             S3Object: {
                 Bucket: bucketName,
