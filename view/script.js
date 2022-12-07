@@ -84,15 +84,6 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
         }
     });
 });
-
-document.getElementById("btnDetectText").addEventListener("click", (e) => {
-    e.preventDefault();
-
-    axios.post("/detectText", { name: fileName }).then((response) => {
-        textDisplay(response.data.data);
-    });
-});
-
 document.getElementById("btnTest").addEventListener("click", (e) => {
     e.preventDefault();
 
