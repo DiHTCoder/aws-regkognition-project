@@ -134,7 +134,7 @@ function textDisplay(kq) {
     const result = kq.TextDetections;
     var data = document.getElementById("data");
     var boundingBox = document.getElementById("image-display");
-    data.innerHTML = "";
+    data.innerHTML += `<br><br> Text Detections: <br>`;
     parentId = 0;
     index = 1;
     for (let i = 0; i < result.length; i++) {
