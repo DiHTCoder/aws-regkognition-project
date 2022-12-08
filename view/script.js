@@ -19,10 +19,10 @@ document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
     var data = document.getElementById("data");
     data.innerHTML = "";
     for (let i = 0; i < result.length; i++) {
-      data.innerHTML += `<span> Confidence: ${result[i].Confidence} </span><br>
-                                <span> Name: ${result[i].Name}</span>`;
+      data.innerHTML += `<span> Độ tin cậy: ${result[i].Confidence} </span><br>
+                                <span> Loại   : ${result[i].Name}</span>`;
       if (result[i].Parents.length != 0) {
-        data.innerHTML += `<br><span> Parents: </span>`;
+        data.innerHTML += `<br><span> Liên quan: </span>`;
       }
       for (let j = 0; j < result[i].Parents.length; j++) {
         data.innerHTML += `<span>${result[i].Parents[j].Name} , </span> `;
