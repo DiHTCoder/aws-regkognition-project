@@ -25,8 +25,8 @@
 ## Triển khai project lên Amazon EC2
 1. Vào trang dịch vụ EC2, tạo một instance
 2. Sử dụng Public DNS để connect instance trong terminal
-3. Tải website lên instance bằng lệnh git clone https://github.com/DiHTCoder/aws-rekognition-project.git
+3. Tải website lên instance bằng lệnh "git clone https://github.com/DiHTCoder/aws-rekognition-project.git"
 4. Chuyển đến thư mục vừa clone: cd aws-rekognition-project
 5. Làm các bước trong "Hướng dẫn sử dụng" ở trên
 6. Quay lại trang EC2 để lấy Public DNS
-7. Mở trình duyệt dán Public DNS và vào cổng 3000. Ví dụ: ec2-54-174-157-86.compute-1.amazonaws.com:3000/v
+7. Mở trình duyệt dán Public DNS và vào cổng 3000. Ví dụ: http://ec2-54-174-157-86.compute-1.amazonaws.com:3000/
