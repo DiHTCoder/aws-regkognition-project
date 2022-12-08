@@ -13,17 +13,17 @@ app.use(cors());
 app.use(express.static("view"));
 
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    sessionToken: process.env.AWS_SESSION_TOKEN,
-  },
-  sslEnabled: false,
-  s3ForcePathStyle: true,
-  signatureVersion: "v4",
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        sessionToken: process.env.AWS_SESSION_TOKEN,
+    },
+    sslEnabled: false,
+    s3ForcePathStyle: true,
+    signatureVersion: "v4",
 });
-const bucketName = "rekognition-aws-main";
+const bucketName = "testrekogni";
 const rekognition = new aws.Rekognition();
 
 aws.config.update({
@@ -33,6 +33,7 @@ aws.config.update({
   region: process.env.AWS_REGION,
   signatureVersion: "v4",
 });
+
 
 const upload = multer({
   fileFilter: (req, file, cb) => {
@@ -70,7 +71,6 @@ app.post("/detectTest", (req, res) => {
         Name: req.body.name,
       },
     },
-    MinConfidence: 80,
   };
   rekognition.detectLabels(params, function (err, data) {
     if (err) console.log(err, err.stack);
@@ -119,9 +119,6 @@ app.post("/detectTest", (req, res) => {
         textFlag = false;
         personFlag = false;
       }
-      // console.log(textFlag);
-      // console.log(personFlag);
-      // console.log(AllTypeFlag);
       if (textFlag) {
         textResult = {};
         textParam = {
@@ -234,22 +231,41 @@ app.post("/detectText", (req, res) => {
   });
 });
 app.post("/detectLabel", (req, res) => {
-  var params = {
-    Image: {
-      S3Object: {
-        Bucket: bucketName,
-        Name: req.body.name,
-      },
-    },
-  };
-  rekognition.detectLabels(params, function (err, data) {
-    if (err) {
-      console.log(err, err.stack);
-    } else {
-      console.log(data);
-      res.send({ data: data });
-    }
-  });
+    var params = {
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.body.name,
+            },
+        },
+    };
+    rekognition.detectLabels(params, function (err, data) {
+        if (err) {
+            console.log(err, err.stack);
+        } else {
+            console.log(data);
+            res.send({ data: data });
+        }
+    });
+});
+
+app.post("/recognizeCeleb", (req, res) => {
+    var params = {
+        Image: {
+            S3Object: {
+                Bucket: bucketName,
+                Name: req.body.name,
+            },
+        },
+    };
+    rekognition.recognizeCelebrities(params, function (err, data) {
+        if (err) {
+            console.log(err, err.stack);
+        } else {
+            console.log(data);
+            res.send({ data: data });
+        }
+    });
 });
 
 app.listen(3000, () => console.log("Server is running on port 3000"));

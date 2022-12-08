@@ -73,9 +73,9 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
         result[i].Gender.Confidence
       }</span><br />`;
 
-      var box = result[i].BoundingBox;
-      var image = document.getElementById("imageDisplay");
-      boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+            const box = result[i].BoundingBox;
+            const image = document.getElementById("imageDisplay");
+            boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
                                                             height:${
                                                               box.Height *
                                                               image.height
@@ -100,6 +100,7 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
     }
   });
 });
+
 document.getElementById("btnDetectText").addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -120,61 +121,164 @@ document.getElementById("btnTest").addEventListener("click", (e) => {
     }
   });
 });
+
+document.getElementById("btnRecognizeCeleb").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    axios.post("/recognizeCeleb", { name: fileName }).then((response) => {
+        celebDisplay(response.data.data);
+    });
+});
+
 function textDisplay(kq) {
-  const result = kq.TextDetections;
-  var data = document.getElementById("data");
-  var boundingBox = document.getElementById("image-display");
-  data.innerHTML = "";
-  parentId = 0;
-  index = 1;
-  for (let i = 0; i < result.length; i++) {
-    var box = result[i].Geometry.BoundingBox;
-    var image = document.getElementById("imageDisplay");
-    if (result[i].Type == "LINE")
-      data.innerHTML += `<span>Dòng thứ ${result[i].Id + 1}: ${
-        result[i].DetectedText
-      }</span><br>`;
-    else {
-      if (result[i].ParentId == parentId) {
-        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
-          parentId + 1
-        }: 
+    const result = kq.TextDetections;
+    var data = document.getElementById("data");
+    var boundingBox = document.getElementById("image-display");
+    data.innerHTML = "";
+    parentId = 0;
+    index = 1;
+    for (let i = 0; i < result.length; i++) {
+        var box = result[i].Geometry.BoundingBox;
+        var image = document.getElementById("imageDisplay");
+        if (result[i].Type == "LINE")
+            data.innerHTML += `<span>Dòng thứ ${result[i].Id + 1}: ${
+                result[i].DetectedText
+            }</span><br>`;
+        else {
+            if (result[i].ParentId == parentId) {
+                data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
+                    parentId + 1
+                }: 
                     ${result[i].DetectedText}</span><br>`;
-        index += 1;
-      } else {
-        index = 1;
-        parentId += 1;
-        data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
-          parentId + 1
-        }: 
+                index += 1;
+            } else {
+                index = 1;
+                parentId += 1;
+                data.innerHTML += `<span>Từ thứ ${index} thuộc dòng thứ ${
+                    parentId + 1
+                }: 
                     ${result[i].DetectedText}</span><br>`;
-        index += 1;
-      }
-    }
-    data.innerHTML += `<span>Độ tin cậy: ${result[i].Confidence}%</span>`;
-    data.innerHTML += `<br><br>`;
-    boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+                index += 1;
+            }
+        }
+        data.innerHTML += `<span>Độ tin cậy: ${result[i].Confidence}%</span>`;
+        data.innerHTML += `<br><br>`;
+        boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
                                                             height:${
-                                                              box.Height *
-                                                              image.height
+                                                                box.Height *
+                                                                image.height
                                                             }px; 
                                                             width: ${
-                                                              box.Width *
-                                                              image.width
+                                                                box.Width *
+                                                                image.width
                                                             }px;
                                                             top: ${
-                                                              box.Top *
-                                                              image.height
+                                                                box.Top *
+                                                                image.height
                                                             }px; 
                                                             left: ${
-                                                              box.Left *
-                                                              image.width
+                                                                box.Left *
+                                                                image.width
                                                             }px;
                                                             border: 2px solid green"> </div> `;
-  }
+    }
 }
-function celebDisplay(kq) {}
+function celebDisplay(kq) {
+    const celebFace = kq.CelebrityFaces;
+    const unrecognizedFace = kq.UnrecognizedFaces;
+    var data = document.getElementById("data");
+    var boundingBox = document.getElementById("image-display");
+    data.innerHTML = "";
+    //Nếu là người nổi tiếng
+    for (let i = 0; i < celebFace.length; i++) {
+        const color = {
+            red: getRandomInt(255),
+            green: getRandomInt(255),
+            blue: getRandomInt(255),
+        };
+        data.innerHTML += `<span>Người ${
+            i + 1
+        }:</span> <span class="color-box" style="border: 2px solid rgb(${
+            color.red
+        }, ${color.blue}, ${color.green})"></span>`;
 
+        data.innerHTML += `<span> Tên: ${celebFace[i].Name} </span> <br />`;
+        data.innerHTML += `<span> Độ tin cậy: ${celebFace[i].MatchConfidence} </span> <br />`;
+
+        const urls = celebFace[i].Urls;
+        data.innerHTML += `<span> Urls: <br />`;
+        for (let k = 0; k < urls.length; k++) {
+            data.innerHTML += `<span><a href= "https://${urls[k]}" target="_blank">${urls[k]}</a></span><br>`;
+        }
+
+        //vẽ boundingBox
+        const image = document.getElementById("imageDisplay");
+        const face = celebFace[i].Face.BoundingBox;
+        boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+                                                            height:${
+                                                                face.Height *
+                                                                image.height
+                                                            }px; 
+                                                            width: ${
+                                                                face.Width *
+                                                                image.width
+                                                            }px;
+                                                            top: ${
+                                                                face.Top *
+                                                                image.height
+                                                            }px; 
+                                                            left: ${
+                                                                face.Left *
+                                                                image.width
+                                                            }px;
+                                                            border: 2px solid rgb(${
+                                                                color.red
+                                                            }, ${color.blue}, ${
+            color.green
+        })"> </div> `;
+    }
+    //Nếu không có dữ liệu
+    for (let i = 0; i < unrecognizedFace.length; i++) {
+        const color = {
+            red: getRandomInt(255),
+            green: getRandomInt(255),
+            blue: getRandomInt(255),
+        };
+
+        data.innerHTML += `<span>Người ${
+            i + 1
+        }:</span> <span class="color-box" style="border: 2px solid rgb(${
+            color.red
+        }, ${color.blue}, ${color.green})"></span>`;
+        data.innerHTML += `<span>Không có dữ liệu</span> <br />`;
+
+        //vẽ boundingBox
+        const image = document.getElementById("imageDisplay");
+        const box = unrecognizedFace[i].BoundingBox;
+        boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+                                                            height:${
+                                                                box.Height *
+                                                                image.height
+                                                            }px; 
+                                                            width: ${
+                                                                box.Width *
+                                                                image.width
+                                                            }px;
+                                                            top: ${
+                                                                box.Top *
+                                                                image.height
+                                                            }px; 
+                                                            left: ${
+                                                                box.Left *
+                                                                image.width
+                                                            }px;
+                                                            border: 2px solid rgb(${
+                                                                color.red
+                                                            }, ${color.blue}, ${
+            color.green
+        })"> </div> `;
+    }
+}
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
