@@ -17,10 +17,12 @@ document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
   axios.post("/detectLabel", { name: fileName }).then((response) => {
     var result = response.data.data.Labels;
     var data = document.getElementById("data");
+    var boundingBox = document.getElementById("image-display");
     data.innerHTML = "";
     for (let i = 0; i < result.length; i++) {
       data.innerHTML += `<span> Độ tin cậy: ${result[i].Confidence} </span><br>
-                                <span> Tên lớp: ${result[i].Name}</span>`;
+                                <span> Tên lớp: ${result[i].Name}</span> <br>
+                              `;
       if (result[i].Parents.length != 0) {
         data.innerHTML += `<br><span> Các lớp liên quan: </span>`;
       }
@@ -28,6 +30,32 @@ document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
         data.innerHTML += `<span>${result[i].Parents[j].Name} , </span> `;
       }
       data.innerHTML += `<br><br>`;
+      if (result[i].Instances.BoundingBox === undefined) {
+        for (let j = 0; j < result[i].Instances.length; j++) {
+          const box = result[i].Instances[j].BoundingBox;
+          const image = document.getElementById("imageDisplay");
+          boundingBox.innerHTML += `<div class="bounding-box" style="display: block;
+                                                            height:${
+                                                              box.Height *
+                                                              image.height
+                                                            }px; 
+                                                            width: ${
+                                                              box.Width *
+                                                              image.width
+                                                            }px;
+                                                            top: ${
+                                                              box.Top *
+                                                              image.height
+                                                            }px; 
+                                                            left: ${
+                                                              box.Left *
+                                                              image.width
+                                                            }px;
+                                                            border: 2px solid green"> </div> `;
+        }
+      } else {
+        console.log(result[i].Instances);
+      }
     }
   });
 });
@@ -45,6 +73,7 @@ document.getElementById("btnDetectFace").addEventListener("click", (e) => {
         green: getRandomInt(255),
         blue: getRandomInt(255),
       };
+
       data.innerHTML += `<span>Người ${
         i + 1
       }:</span> <span class="color-box" style="border: 2px solid rgb(${
