@@ -70,7 +70,6 @@ app.post("/detectTest", (req, res) => {
         Name: req.body.name,
       },
     },
-    MinConfidence: 80,
   };
   rekognition.detectLabels(params, function (err, data) {
     if (err) console.log(err, err.stack);
@@ -113,15 +112,16 @@ app.post("/detectTest", (req, res) => {
           textFlag = true;
           continue;
         }
+        if (labelData[i].Name === "Photography") {
+          textFlag = true;
+          continue;
+        }
       }
       if (textFlag && personFlag) {
         AllTypeFlag = true;
         textFlag = false;
         personFlag = false;
       }
-      // console.log(textFlag);
-      // console.log(personFlag);
-      // console.log(AllTypeFlag);
       if (textFlag) {
         textResult = {};
         textParam = {
@@ -160,7 +160,7 @@ app.post("/detectTest", (req, res) => {
         });
       }
       if (AllTypeFlag) {
-        posterParam = {
+        allTypeParam = {
           Image: {
             S3Object: {
               Bucket: bucketName,
@@ -178,10 +178,10 @@ app.post("/detectTest", (req, res) => {
                 if (err) console.log(err, err.stack);
                 else {
                   finalResult.celebrities = data;
+                  res.send({ data: finalResult });
                 }
               }
             );
-            res.send({ data: finalResult });
           }
         });
       }
@@ -213,8 +213,6 @@ app.post("/detectText", (req, res) => {
     Filters: {
       WordFilter: {
         MinConfidence: 80,
-        //MinBoundingBoxWidth
-        //MinBoundingBoxHeight
       },
     },
     Image: {
@@ -243,6 +241,25 @@ app.post("/detectLabel", (req, res) => {
     },
   };
   rekognition.detectLabels(params, function (err, data) {
+    if (err) {
+      console.log(err, err.stack);
+    } else {
+      console.log(data);
+      res.send({ data: data });
+    }
+  });
+});
+
+app.post("/recognizeCeleb", (req, res) => {
+  var params = {
+    Image: {
+      S3Object: {
+        Bucket: bucketName,
+        Name: req.body.name,
+      },
+    },
+  };
+  rekognition.recognizeCelebrities(params, function (err, data) {
     if (err) {
       console.log(err, err.stack);
     } else {
