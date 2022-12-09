@@ -23,7 +23,7 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 });
-const bucketName = "rekognitt";
+const bucketName = "rekognition-aws-main";
 const rekognition = new aws.Rekognition();
 
 aws.config.update({
@@ -33,7 +33,6 @@ aws.config.update({
   region: process.env.AWS_REGION,
   signatureVersion: "v4",
 });
-
 
 const upload = multer({
   fileFilter: (req, file, cb) => {
@@ -158,8 +157,7 @@ app.post("/detectTest", (req, res) => {
             finalResult.celebrities = data;
             res.send({ data: finalResult });
           }
-        }
-        );
+        });
       }
       if (AllTypeFlag) {
         allTypeParam = {
@@ -184,7 +182,6 @@ app.post("/detectTest", (req, res) => {
                 }
               }
             );
-
           }
         });
       }
@@ -216,8 +213,6 @@ app.post("/detectText", (req, res) => {
     Filters: {
       WordFilter: {
         MinConfidence: 80,
-        //MinBoundingBoxWidth
-        //MinBoundingBoxHeight
       },
     },
     Image: {
