@@ -11,6 +11,7 @@ document.getElementById("imageUp").addEventListener("change", (e) => {
     fileName = res.data.image;
   });
 });
+
 document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -59,6 +60,7 @@ document.getElementById("btnDetectLabel").addEventListener("click", (e) => {
     }
   });
 });
+
 document.getElementById("btnDetectFace").addEventListener("click", (e) => {
   e.preventDefault();
 
