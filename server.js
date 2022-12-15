@@ -12,14 +12,6 @@ aws.config.update({
   signatureVersion: "v4",
 });
 
-const cors = require("cors");
-require("dotenv").config();
-
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.static("view"));
-
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -31,6 +23,15 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 });
+
+const cors = require("cors");
+require("dotenv").config();
+
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static("view"));
+
 const bucketName = "imagedetection12";
 const rekognition = new aws.Rekognition();
 
