@@ -4,14 +4,21 @@ const bodyParser = require("body-parser");
 const multerS3 = require("multer-s3");
 const multer = require("multer");
 const aws = require("aws-sdk");
-aws.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  sessionToken: process.env.AWS_SESSION_TOKEN,
-  region: process.env.AWS_REGION,
-  signatureVersion: "v4",
-});
+const cors = require("cors");
+require("dotenv").config();
 
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+app.use(express.static("view"));
+
+aws.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.AWS_SESSION_TOKEN,
+    region: process.env.AWS_REGION,
+    signatureVersion: "v4",
+});
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
@@ -24,22 +31,7 @@ const s3 = new S3Client({
     signatureVersion: "v4",
 });
 
-aws.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    sessionToken: process.env.AWS_SESSION_TOKEN,
-    region: process.env.AWS_REGION,
-    signatureVersion: "v4",
-});
 const bucketName = "rekognitt";
-const cors = require("cors");
-require("dotenv").config();
-
-const app = express();
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.static("view"));
-
 const rekognition = new aws.Rekognition();
 
 //Upload Image
