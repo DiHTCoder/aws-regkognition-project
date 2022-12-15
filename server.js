@@ -23,8 +23,6 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 });
-const bucketName = "rekognition-aws-main";
-const rekognition = new aws.Rekognition();
 
 aws.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -34,6 +32,10 @@ aws.config.update({
   signatureVersion: "v4",
 });
 
+const bucketName = "rekognition-project-final";
+const rekognition = new aws.Rekognition();
+
+//Upload Image
 const upload = multer({
   fileFilter: (req, file, cb) => {
     if (
@@ -62,6 +64,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
   res.send({ image: req.image });
 });
 
+//Call API
 app.post("/detectTest", (req, res) => {
   var params = {
     Image: {
@@ -189,6 +192,7 @@ app.post("/detectTest", (req, res) => {
   });
 });
 
+//Detect face
 app.post("/detectFace", (req, res) => {
   console.log(req.body.name);
   var params = {
@@ -208,6 +212,8 @@ app.post("/detectFace", (req, res) => {
     }
   });
 });
+
+//Detect text
 app.post("/detectText", (req, res) => {
   var params = {
     Filters: {
@@ -231,6 +237,8 @@ app.post("/detectText", (req, res) => {
     }
   });
 });
+
+//Detect label
 app.post("/detectLabel", (req, res) => {
   var params = {
     Image: {
@@ -250,6 +258,7 @@ app.post("/detectLabel", (req, res) => {
   });
 });
 
+//detect famous person
 app.post("/recognizeCeleb", (req, res) => {
   var params = {
     Image: {
