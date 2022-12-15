@@ -1,5 +1,5 @@
 const express = require("express");
-const { S3Client } = require("@aws-sdk/client-s3");
+const { S3Client } = require("@aws-sdk/clients/s3");
 const bodyParser = require("body-parser");
 const multerS3 = require("multer-s3");
 const multer = require("multer");
