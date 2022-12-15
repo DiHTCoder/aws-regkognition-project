@@ -23,7 +23,7 @@ const s3 = new S3Client({
   s3ForcePathStyle: true,
   signatureVersion: "v4",
 });
-const bucketName = "rekognition-aws-main";
+const bucketName = "imagedetection12";
 const rekognition = new aws.Rekognition();
 
 aws.config.update({
